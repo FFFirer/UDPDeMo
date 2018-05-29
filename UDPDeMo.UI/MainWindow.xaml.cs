@@ -23,6 +23,22 @@ namespace UDPDeMo.UI
         public MainWindow()
         {
             InitializeComponent();
+            DemoWindow d1 = new DemoWindow()
+            {
+                Title = "客户端1",
+                uDPHelper = new UDPHelper.UDPHelper(51666),
+            };
+            DemoWindow d2 = new DemoWindow()
+            {
+                Title="客户端2",
+                uDPHelper = new UDPHelper.UDPHelper(51667),
+            };
+            d1.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            d2.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            this.Hide();
+            d1.Show();
+            d2.Show();
+
         }
     }
 }
