@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
+using System.Net.NetworkInformation;
 
 namespace UDPHelper
 {
@@ -33,7 +34,8 @@ namespace UDPHelper
 
         public UDPHelper(int p)
         {
-            StartInit();
+            //StartInit();
+            StartInit2();
             this.port = p;
             //创建本地UdpClient,并监听
             LocalEndPoint = new IPEndPoint(LocalAddress, port);
@@ -50,6 +52,43 @@ namespace UDPHelper
                 {
                     LocalAddress = ip;
                     break;
+                }
+            }
+        }
+        #endregion
+
+        #region 获取所有本机适配器IP
+        public void StartInit2()
+        {
+            NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+            foreach(var a in adapters)
+            {
+                //IPInterfaceProperties ip = a.GetIPProperties();
+                //if (ip.UnicastAddresses.Count > 0)
+                //{
+                //    foreach(IPAddressInformation add in ip.UnicastAddresses)
+                //    {
+                //        if(add.Address.AddressFamily == AddressFamily.InterNetwork && a.Name == "WLAN")
+                //        {
+                //            LocalAddress = add.Address;
+                //        }
+                //    }
+                //}
+                if(a.Name == "WLAN")
+                {
+                    IPInterfaceProperties ip = a.GetIPProperties();
+                    if(ip.UnicastAddresses.Count > 0)
+                    {
+                        foreach(IPAddressInformation add in ip.UnicastAddresses)
+                        {
+                            if(add.Address.AddressFamily == AddressFamily.InterNetwork)
+                            {
+                                LocalAddress = add.Address;
+                                break;
+                            }
+                        }
+                        break;
+                    }
                 }
             }
         }
